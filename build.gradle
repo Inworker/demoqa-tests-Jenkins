@@ -1,5 +1,7 @@
 plugins {
     id 'java-library'
+    id 'io.qameta.allure' version '2.11.2'
+
 }
 
 repositories {
@@ -34,5 +36,22 @@ task simple_test(type: Test) {
 task demoqa_test(type: Test) {
     useJUnitPlatform {
         includeTags("demoqa")
+    }
+
+}
+
+def allureVersion = "2.21.0"
+
+allure{
+    report {
+        version.set(allureVersion)
+    }
+    adapter {
+        aspectjWeaver.set(true)
+        frameworks {
+            junit5 {
+                adapterVersion.set(allureVersion)
+            }
+        }
     }
 }
