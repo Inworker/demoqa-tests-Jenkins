@@ -1,7 +1,9 @@
 package tests.testJenkinsUI;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.logevents.SelenideLogger;
 import com.github.javafaker.Faker;
+import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import tests.data.TestData;
@@ -29,6 +31,7 @@ public class TextBoxWithFakerTests{
         //Configuration.holdBrowserOpen = false;
         Configuration.timeout = 5000; // default 4000
         Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
     }
 
     @Test
