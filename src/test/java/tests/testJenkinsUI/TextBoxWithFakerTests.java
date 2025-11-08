@@ -2,12 +2,16 @@ package tests.testJenkinsUI;
 
 import com.codeborne.selenide.Configuration;
 import com.github.javafaker.Faker;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import tests.data.TestData;
 import org.junit.jupiter.api.Test;
 import tests.pages.TextBoxPage;
 import tests.pages.components.FinalTableComponent;
+
+import java.util.List;
+import java.util.Map;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
@@ -28,6 +32,26 @@ public class TextBoxWithFakerTests{
         Configuration.pageLoadStrategy = "eager";
         //Configuration.holdBrowserOpen = false;
         Configuration.timeout = 5000; // default 4000
+        // Настройка WebDriverManager для автоматической загрузки драйвера
+        WebDriverManager.chromedriver().setup();
+
+        // Конфигурация Selenide
+        Configuration.browser = "chrome";
+        Configuration.headless = true;
+        Configuration.browserSize = "1920x1080";
+        Configuration.timeout = 10000;
+        Configuration.remote = null; // Убедитесь, что remote отключен
+
+        // Опции для Chrome в CI-окружении
+        Configuration.browserCapabilities.setCapability("goog:chromeOptions", Map.of(
+                "args", List.of(
+                        "--no-sandbox",
+                        "--disable-dev-shm-usage",
+                        "--disable-gpu",
+                        "--headless",
+                        "--remote-allow-origins=*"
+                )
+        ));
     }
 
     @Test
