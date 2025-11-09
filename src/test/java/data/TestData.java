@@ -1,4 +1,4 @@
-package tests.data;
+package data;
 import com.github.javafaker.Faker;
 import tests.testJenkinsUI.TestBase;
 import java.util.Locale;
