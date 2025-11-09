@@ -9,8 +9,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import data.TestData;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import pages.TextBoxPage;
 import pages.components.FinalTableComponent;
+
+import java.util.Map;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
@@ -33,6 +36,12 @@ public class TextBoxWithAttachTests {
         Configuration.timeout = 5000; // default 4000
         Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("selenoid:options", Map.<String, Object>of(
+                "enableVNC", true,
+                "enableVideo", true
+        ));
+        Configuration.browserCapabilities = capabilities;
     }
 
     @AfterEach
@@ -41,6 +50,7 @@ public class TextBoxWithAttachTests {
         Attach.screenshotAs("Last screenShot");
         Attach.pageSource();
         Attach.browserConsoleLogs();
+        Attach.addVideo();
     }
 
     @Tag("demoqa")
