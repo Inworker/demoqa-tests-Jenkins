@@ -39,8 +39,11 @@ public class TextBoxWithAttachTests {
     void addAttachments()
     {
         Attach.screenshotAs("Last screenShot");
+        Attach.pageSource();
+        Attach.browserConsoleLogs();
     }
 
+    @Tag("demoqa")
     @Test
     void fillFormTest() {
         open("/text-box");
@@ -87,6 +90,7 @@ public class TextBoxWithAttachTests {
                 .checkTableData("State and City", testData.state + " " + testData.city);
     });}
 
+    @Tag("demoqa")
     @Test
     void fillRequiredFields() {
 
@@ -102,6 +106,8 @@ public class TextBoxWithAttachTests {
                 .checkTableData("Mobile", testData.phone)
                 .checkTableData("Date of Birth",testData.day + " " + testData.month + "," + testData.year);
     }
+
+    @Tag("demoqa")
     @Test
     void fillNonRequiredFields() {
 
