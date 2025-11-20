@@ -1,13 +1,19 @@
 package tests.testJenkinsUI;
 
 import com.codeborne.selenide.Configuration;
-import com.github.javafaker.Faker;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import helpers.Attach;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
-import tests.data.TestData;
+import data.TestData;
 import org.junit.jupiter.api.Test;
-import tests.pages.TextBoxPage;
-import tests.pages.components.FinalTableComponent;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import pages.TextBoxPage;
+import pages.components.FinalTableComponent;
+
+import java.util.Map;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
@@ -15,7 +21,7 @@ import static com.codeborne.selenide.Selenide.open;
 import static io.qameta.allure.Allure.step;
 import static java.lang.String.format;
 
-public class TextBoxWithFakerTests{
+public class TextBoxWithAttachTests {
 
     TextBoxPage textBoxPage = new TextBoxPage();
     FinalTableComponent finalTableComponent = new FinalTableComponent();
@@ -28,8 +34,26 @@ public class TextBoxWithFakerTests{
         Configuration.pageLoadStrategy = "eager";
         //Configuration.holdBrowserOpen = false;
         Configuration.timeout = 5000; // default 4000
+        Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("selenoid:options", Map.<String, Object>of(
+                "enableVNC", true,
+                "enableVideo", true
+        ));
+        Configuration.browserCapabilities = capabilities;
     }
 
+    @AfterEach
+    void addAttachments()
+    {
+        Attach.screenshotAs("Last screenShot");
+        Attach.pageSource();
+        Attach.browserConsoleLogs();
+        Attach.addVideo();
+    }
+
+    @Tag("demoqa")
     @Test
     void fillFormTest() {
         open("/text-box");
@@ -76,6 +100,7 @@ public class TextBoxWithFakerTests{
                 .checkTableData("State and City", testData.state + " " + testData.city);
     });}
 
+    @Tag("demoqa")
     @Test
     void fillRequiredFields() {
 
@@ -91,6 +116,8 @@ public class TextBoxWithFakerTests{
                 .checkTableData("Mobile", testData.phone)
                 .checkTableData("Date of Birth",testData.day + " " + testData.month + "," + testData.year);
     }
+
+    @Tag("demoqa")
     @Test
     void fillNonRequiredFields() {
 
